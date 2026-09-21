@@ -3,19 +3,48 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Countdown • Feira do Alvarinho de Monção 2027</title>
 
+  <!-- SEO -->
+  <meta name="description" content="Contagem decrescente para a Feira do Alvarinho de Monção 2027 — 1 a 4 de julho, no Campo da Feira. A maior Wine Party de Portugal.">
+  <meta name="theme-color" content="#0a2e24">
+  <meta name="author" content="Feira do Alvarinho de Monção">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Feira do Alvarinho de Monção 2027">
+  <meta property="og:description" content="A maior Wine Party de Portugal — 1 a 4 de julho de 2027.">
+  <meta property="og:image" content="banner.jpg">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_PT">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Feira do Alvarinho de Monção 2027">
+  <meta name="twitter:description" content="A maior Wine Party de Portugal — 1 a 4 de julho de 2027.">
+  <meta name="twitter:image" content="banner.jpg">
+
+  <!-- Favicon (emoji SVG) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍷</text></svg>">
+
+  <!-- Fontes -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;500;700&display=swap" rel="stylesheet">
 
+  <!-- CSS -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
   <section class="countdown-section">
 
-    <div class="banner" aria-hidden="true"></div>
+    <!-- Imagem de fundo: vertical em mobile, horizontal em desktop -->
+    <picture class="banner" aria-hidden="true">
+      <source media="(max-width: 767px)" srcset="bannerm.jpg">
+      <img src="banner.jpg" alt="" loading="eager" fetchpriority="high" decoding="async">
+    </picture>
+
     <div class="overlay" aria-hidden="true"></div>
 
     <div class="content">
@@ -26,7 +55,7 @@
 
       <p class="subtitle">Está a chegar</p>
 
-      <div class="countdown" id="countdown" aria-live="polite">
+      <div class="countdown" id="countdown">
         <div class="unit">
           <span class="number" id="weeks">00</span>
           <span class="label">Semanas</span>
@@ -51,6 +80,9 @@
 
       <p class="target-date">1 de julho de 2027 · 18h00</p>
       <p class="message" id="message"></p>
+
+      <!-- Estado para leitores de ecrã (não visível) -->
+      <p class="sr-only" id="sr-status" aria-live="polite"></p>
 
     </div>
 

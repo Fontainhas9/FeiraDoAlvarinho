@@ -4,17 +4,48 @@
    COUNTDOWN • Feira do Alvarinho de Monção 2027
    ========================================================= */
 
+/* ---------------------------------------------------------
+   Design tokens
+   --------------------------------------------------------- */
 :root {
+  /* Cores base */
   --verde-profundo: #0a2e24;
   --verde-escuro: #0d3b2e;
   --verde-medio: #145241;
   --dourado: #e8a83a;
   --dourado-claro: #f5c542;
-  --ambar: #f0b84a;
   --creme: #f5efe0;
-  --texto-suave: rgba(245, 239, 224, 0.78);
+
+  /* Variantes com opacidade */
+  --verde-95: rgba(10, 46, 36, 0.95);
+  --verde-85: rgba(10, 46, 36, 0.85);
+  --verde-70: rgba(10, 46, 36, 0.70);
+  --verde-55: rgba(10, 46, 36, 0.55);
+  --verde-35: rgba(10, 46, 36, 0.35);
+
+  --dourado-45: rgba(232, 168, 58, 0.45);
+  --dourado-25: rgba(232, 168, 58, 0.25);
+  --dourado-15: rgba(245, 197, 66, 0.15);
+
+  --creme-78: rgba(245, 239, 224, 0.78);
+  --creme-50: rgba(245, 239, 224, 0.50);
+
+  /* Tokens reutilizáveis */
+  --blur: blur(8px);
+  --radius: 6px;
+  --transition: 0.3s ease;
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.35);
+  --shadow-title: 0 4px 24px rgba(0, 0, 0, 0.45);
+  --shadow-number: 0 2px 24px rgba(245, 197, 66, 0.4);
+
+  /* Fontes */
+  --font-display: "Cormorant Garamond", serif;
+  --font-body: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
+/* ---------------------------------------------------------
+   Reset
+   --------------------------------------------------------- */
 *,
 *::before,
 *::after {
@@ -29,11 +60,24 @@ body {
 }
 
 body {
-  font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-body);
   color: var(--creme);
   background-color: var(--verde-profundo);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+}
+
+/* Esconde apenas visualmente (leitores de ecrã continuam a ler) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* ---------------------------------------------------------
@@ -52,26 +96,32 @@ body {
   isolation: isolate;
 }
 
-/* Imagem do cartaz — centrada e completa */
+/* ---------------------------------------------------------
+   Imagem de fundo (via <picture>)
+   --------------------------------------------------------- */
 .banner {
   position: absolute;
   inset: 0;
   z-index: -2;
-  background-image: url("banner.jpg");
-  background-size: contain;
-  background-position: center center;
-  background-repeat: no-repeat;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
   background-color: var(--verde-profundo);
+}
+
+.banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;             /* imagem COMPLETA, sem cortes */
+  object-position: center center;  /* centrada em ambos os eixos */
   filter: saturate(1.05) brightness(0.9);
+  display: block;
 }
 
-@media (min-width: 1200px) {
-  .banner {
-    background-size: 100% auto;
-  }
-}
-
-/* Overlay de contraste */
+/* ---------------------------------------------------------
+   Overlay de contraste
+   --------------------------------------------------------- */
 .overlay {
   position: absolute;
   inset: 0;
@@ -79,15 +129,15 @@ body {
   background:
     radial-gradient(
       circle at 50% 45%,
-      rgba(10, 46, 36, 0.35) 0%,
-      rgba(10, 46, 36, 0.7) 55%,
-      rgba(10, 46, 36, 0.9) 100%
+      var(--verde-35) 0%,
+      var(--verde-70) 55%,
+      var(--verde-95) 100%
     ),
     linear-gradient(
       180deg,
-      rgba(10, 46, 36, 0.55) 0%,
-      rgba(10, 46, 36, 0.35) 45%,
-      rgba(10, 46, 36, 0.85) 100%
+      var(--verde-55) 0%,
+      var(--verde-35) 45%,
+      var(--verde-85) 100%
     );
 }
 
@@ -127,26 +177,26 @@ body {
 }
 
 .title {
-  font-family: "Cormorant Garamond", serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: clamp(2.2rem, 6vw, 4.2rem);
   line-height: 1.05;
   letter-spacing: 0.02em;
   color: var(--creme);
   margin-bottom: 0.6rem;
-  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+  text-shadow: var(--shadow-title);
 }
 
 .subtitle {
   font-weight: 300;
   font-size: clamp(0.95rem, 2vw, 1.15rem);
-  color: var(--texto-suave);
+  color: var(--creme-78);
   letter-spacing: 0.08em;
   margin-bottom: 3rem;
 }
 
 /* ---------------------------------------------------------
-   Grid do countdown — 5 unidades
+   Grid do countdown
    --------------------------------------------------------- */
 .countdown {
   display: grid;
@@ -161,31 +211,42 @@ body {
   align-items: center;
   justify-content: center;
   padding: 1.5rem 0.4rem;
-  border: 1px solid rgba(232, 168, 58, 0.45);
-  border-radius: 6px;
-  background: rgba(10, 46, 36, 0.55);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.35),
-    inset 0 1px 0 rgba(245, 197, 66, 0.15);
-  transition: border-color 0.3s ease, transform 0.3s ease, background 0.3s ease;
+  border: 1px solid var(--dourado-45);
+  border-radius: var(--radius);
+  background: var(--verde-55);
+  -webkit-backdrop-filter: var(--blur);
+  backdrop-filter: var(--blur);
+  box-shadow: var(--shadow-card), inset 0 1px 0 var(--dourado-15);
+  transition: border-color var(--transition), transform var(--transition), background var(--transition);
 }
 
 .unit:hover {
   border-color: var(--dourado-claro);
-  background: rgba(10, 46, 36, 0.7);
+  background: var(--verde-70);
   transform: translateY(-3px);
 }
 
 .number {
-  font-family: "Cormorant Garamond", serif;
+  font-family: var(--font-display);
   font-weight: 600;
   font-size: clamp(1.8rem, 5.5vw, 3.4rem);
   line-height: 1;
   color: var(--dourado-claro);
   font-variant-numeric: tabular-nums;
-  text-shadow: 0 2px 24px rgba(245, 197, 66, 0.4);
+  min-width: 2ch;
+  text-align: center;
+  text-shadow: var(--shadow-number);
+}
+
+/* Animação subtil quando o número muda */
+.number.changed {
+  animation: pulse 0.3s ease;
+}
+
+@keyframes pulse {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.06); }
+  100% { transform: scale(1); }
 }
 
 .label {
@@ -193,14 +254,14 @@ body {
   font-size: clamp(0.6rem, 1.2vw, 0.75rem);
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--texto-suave);
+  color: var(--creme-78);
 }
 
 /* ---------------------------------------------------------
    Data alvo + mensagem
    --------------------------------------------------------- */
 .target-date {
-  font-family: "Cormorant Garamond", serif;
+  font-family: var(--font-display);
   font-size: clamp(1.1rem, 2.5vw, 1.5rem);
   color: var(--dourado-claro);
   letter-spacing: 0.1em;
@@ -210,7 +271,7 @@ body {
   margin-top: 1rem;
   font-size: 0.9rem;
   letter-spacing: 0.15em;
-  color: var(--texto-suave);
+  color: var(--creme-78);
   min-height: 1.2em;
 }
 
@@ -224,11 +285,11 @@ body {
   font-size: 0.75rem;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: rgba(245, 239, 224, 0.5);
+  color: var(--creme-50);
 }
 
 /* ---------------------------------------------------------
-   Animação
+   Animação de entrada
    --------------------------------------------------------- */
 @keyframes fadeUp {
   from {
@@ -244,33 +305,32 @@ body {
 /* ---------------------------------------------------------
    Responsivo
    --------------------------------------------------------- */
-@media (max-width: 900px) {
+
+/* Tablets: 3 colunas + 2 centradas em baixo (3+2 equilibrado) */
+@media (max-width: 900px) and (min-width: 561px) {
   .countdown {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     gap: 0.75rem;
   }
 
-  .countdown .unit:nth-child(4) {
-    grid-column: 1 / 2;
-  }
-  .countdown .unit:nth-child(5) {
-    grid-column: 2 / 4;
-  }
+  .countdown .unit { grid-column: span 2; }
+  .countdown .unit:nth-child(4) { grid-column: 2 / span 2; }
+  .countdown .unit:nth-child(5) { grid-column: 4 / span 2; }
 }
 
+/* Mobile: 2 colunas + Semanas em cima a toda a largura */
 @media (max-width: 560px) {
+  .countdown-section {
+    padding: 3rem 1rem 2rem;
+  }
+
   .countdown {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.7rem;
   }
 
   .countdown .unit:nth-child(1) {
-    grid-column: 1 / -1;
-  }
-
-  .countdown .unit:nth-child(4),
-  .countdown .unit:nth-child(5) {
-    grid-column: auto;
+    grid-column: 1 / -1; /* Semanas ocupa a linha toda */
   }
 
   .unit {
@@ -279,6 +339,12 @@ body {
 
   .subtitle {
     margin-bottom: 2rem;
+  }
+
+  /* Rodapé deixa de sobrepor o conteúdo */
+  .footer {
+    position: static;
+    margin-top: 2.5rem;
   }
 }
 
@@ -291,5 +357,8 @@ body {
   }
   .unit {
     transition: none;
+  }
+  .number.changed {
+    animation: none;
   }
 }
