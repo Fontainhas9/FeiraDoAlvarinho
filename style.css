@@ -2,7 +2,6 @@
 
 /* =========================================================
    COUNTDOWN • Feira do Alvarinho de Monção 2027
-   Tema inspirado no cartaz oficial
    ========================================================= */
 
 :root {
@@ -53,36 +52,26 @@ body {
   isolation: isolate;
 }
 
-/* ---------------------------------------------------------
-   Imagem do cartaz — CENTRADA e COMPLETA
-   --------------------------------------------------------- */
+/* Imagem do cartaz — centrada e completa */
 .banner {
   position: absolute;
   inset: 0;
   z-index: -2;
-
-  /* Mostra a imagem inteira, sem cortes */
   background-image: url("banner.jpg");
-  background-size: contain;          /* imagem completa, sem cortes */
-  background-position: center center; /* centrada horizontal e verticalmente */
+  background-size: contain;
+  background-position: center center;
   background-repeat: no-repeat;
-
-  /* Fundo que preenche o espaço em volta (topo/base) */
   background-color: var(--verde-profundo);
-
   filter: saturate(1.05) brightness(0.9);
 }
 
-/* Em ecrãs largos, garante que a imagem toca nas laterais */
 @media (min-width: 1200px) {
   .banner {
     background-size: 100% auto;
   }
 }
 
-/* ---------------------------------------------------------
-   Overlay de contraste
-   --------------------------------------------------------- */
+/* Overlay de contraste */
 .overlay {
   position: absolute;
   inset: 0;
@@ -129,7 +118,7 @@ body {
 }
 
 .kicker {
-  font-size: clamp(1rem, 2.4vw, 1.6rem);   /* ← aumentado */
+  font-size: clamp(1rem, 2.4vw, 1.6rem);
   letter-spacing: 0.35em;
   text-transform: uppercase;
   color: var(--dourado-claro);
@@ -276,7 +265,7 @@ body {
   }
 
   .countdown .unit:nth-child(1) {
-    grid-column: 1 / -1; /* Semanas ocupa a linha toda */
+    grid-column: 1 / -1;
   }
 
   .countdown .unit:nth-child(4),

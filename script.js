@@ -30,10 +30,10 @@
 
     const totalSeconds = Math.floor(remainingMs / 1000);
 
-    const WK = 7 * 24 * 60 * 60; // segundos numa semana
-    const DAY = 24 * 60 * 60;    // segundos num dia
-    const HR = 60 * 60;          // segundos numa hora
-    const MIN = 60;              // segundos num minuto
+    const WK = 7 * 24 * 60 * 60;
+    const DAY = 24 * 60 * 60;
+    const HR = 60 * 60;
+    const MIN = 60;
 
     const weeks = Math.floor(totalSeconds / WK);
     const days = Math.floor((totalSeconds % WK) / DAY);
