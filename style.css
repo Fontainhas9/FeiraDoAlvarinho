@@ -1,0 +1,305 @@
+@charset "UTF-8";
+
+/* =========================================================
+   COUNTDOWN • Feira do Alvarinho de Monção 2027
+   Tema inspirado no cartaz oficial
+   ========================================================= */
+
+:root {
+  --verde-profundo: #0a2e24;
+  --verde-escuro: #0d3b2e;
+  --verde-medio: #145241;
+  --dourado: #e8a83a;
+  --dourado-claro: #f5c542;
+  --ambar: #f0b84a;
+  --creme: #f5efe0;
+  --texto-suave: rgba(245, 239, 224, 0.78);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--creme);
+  background-color: var(--verde-profundo);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ---------------------------------------------------------
+   Secção principal
+   --------------------------------------------------------- */
+.countdown-section {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 3rem 1.5rem 5rem;
+  text-align: center;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* ---------------------------------------------------------
+   Imagem do cartaz — CENTRADA e COMPLETA
+   --------------------------------------------------------- */
+.banner {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+
+  /* Mostra a imagem inteira, sem cortes */
+  background-image: url("banner.jpg");
+  background-size: contain;          /* imagem completa, sem cortes */
+  background-position: center center; /* centrada horizontal e verticalmente */
+  background-repeat: no-repeat;
+
+  /* Fundo que preenche o espaço em volta (topo/base) */
+  background-color: var(--verde-profundo);
+
+  filter: saturate(1.05) brightness(0.9);
+}
+
+/* Em ecrãs largos, garante que a imagem toca nas laterais */
+@media (min-width: 1200px) {
+  .banner {
+    background-size: 100% auto;
+  }
+}
+
+/* ---------------------------------------------------------
+   Overlay de contraste
+   --------------------------------------------------------- */
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(
+      circle at 50% 45%,
+      rgba(10, 46, 36, 0.35) 0%,
+      rgba(10, 46, 36, 0.7) 55%,
+      rgba(10, 46, 36, 0.9) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(10, 46, 36, 0.55) 0%,
+      rgba(10, 46, 36, 0.35) 45%,
+      rgba(10, 46, 36, 0.85) 100%
+    );
+}
+
+.overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.015) 0px,
+      rgba(255, 255, 255, 0.015) 1px,
+      transparent 1px,
+      transparent 6px
+    );
+}
+
+/* ---------------------------------------------------------
+   Conteúdo
+   --------------------------------------------------------- */
+.content {
+  position: relative;
+  z-index: 2;
+  max-width: 1100px;
+  width: 100%;
+  animation: fadeUp 1s ease-out both;
+}
+
+.kicker {
+  font-size: 0.85rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--dourado-claro);
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 700;
+  font-size: clamp(2.2rem, 6vw, 4.2rem);
+  line-height: 1.05;
+  letter-spacing: 0.02em;
+  color: var(--creme);
+  margin-bottom: 0.6rem;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+}
+
+.subtitle {
+  font-weight: 300;
+  font-size: clamp(0.95rem, 2vw, 1.15rem);
+  color: var(--texto-suave);
+  letter-spacing: 0.08em;
+  margin-bottom: 3rem;
+}
+
+/* ---------------------------------------------------------
+   Grid do countdown — 5 unidades
+   --------------------------------------------------------- */
+.countdown {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.9rem;
+  margin-bottom: 2.5rem;
+}
+
+.unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 0.4rem;
+  border: 1px solid rgba(232, 168, 58, 0.45);
+  border-radius: 6px;
+  background: rgba(10, 46, 36, 0.55);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(245, 197, 66, 0.15);
+  transition: border-color 0.3s ease, transform 0.3s ease, background 0.3s ease;
+}
+
+.unit:hover {
+  border-color: var(--dourado-claro);
+  background: rgba(10, 46, 36, 0.7);
+  transform: translateY(-3px);
+}
+
+.number {
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 600;
+  font-size: clamp(1.8rem, 5.5vw, 3.4rem);
+  line-height: 1;
+  color: var(--dourado-claro);
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 2px 24px rgba(245, 197, 66, 0.4);
+}
+
+.label {
+  margin-top: 0.6rem;
+  font-size: clamp(0.6rem, 1.2vw, 0.75rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--texto-suave);
+}
+
+/* ---------------------------------------------------------
+   Data alvo + mensagem
+   --------------------------------------------------------- */
+.target-date {
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  color: var(--dourado-claro);
+  letter-spacing: 0.1em;
+}
+
+.message {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  letter-spacing: 0.15em;
+  color: var(--texto-suave);
+  min-height: 1.2em;
+}
+
+/* ---------------------------------------------------------
+   Rodapé
+   --------------------------------------------------------- */
+.footer {
+  position: absolute;
+  bottom: 1.5rem;
+  z-index: 2;
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(245, 239, 224, 0.5);
+}
+
+/* ---------------------------------------------------------
+   Animação
+   --------------------------------------------------------- */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------------------------------------------------------
+   Responsivo
+   --------------------------------------------------------- */
+@media (max-width: 900px) {
+  .countdown {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+  }
+
+  .countdown .unit:nth-child(4) {
+    grid-column: 1 / 2;
+  }
+  .countdown .unit:nth-child(5) {
+    grid-column: 2 / 4;
+  }
+}
+
+@media (max-width: 560px) {
+  .countdown {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.7rem;
+  }
+
+  .countdown .unit:nth-child(1) {
+    grid-column: 1 / -1; /* Semanas ocupa a linha toda */
+  }
+
+  .countdown .unit:nth-child(4),
+  .countdown .unit:nth-child(5) {
+    grid-column: auto;
+  }
+
+  .unit {
+    padding: 1.2rem 0.4rem;
+  }
+
+  .subtitle {
+    margin-bottom: 2rem;
+  }
+}
+
+/* ---------------------------------------------------------
+   Acessibilidade
+   --------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .content {
+    animation: none;
+  }
+  .unit {
+    transition: none;
+  }
+}
