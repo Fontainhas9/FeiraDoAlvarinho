@@ -98,6 +98,7 @@ body {
 
 /* ---------------------------------------------------------
    Imagem de fundo (via <picture>)
+   SEMPRE completa, sem cortes — em desktop e mobile
    --------------------------------------------------------- */
 .banner {
   position: absolute;
@@ -113,8 +114,8 @@ body {
 .banner img {
   width: 100%;
   height: 100%;
-  object-fit: contain;             /* imagem COMPLETA, sem cortes */
-  object-position: center center;  /* centrada em ambos os eixos */
+  object-fit: contain;             /* imagem COMPLETA, nunca cortada */
+  object-position: center center;  /* centrada horizontal e verticalmente */
   filter: saturate(1.05) brightness(0.9);
   display: block;
 }
@@ -238,7 +239,6 @@ body {
   text-shadow: var(--shadow-number);
 }
 
-/* Animação subtil quando o número muda */
 .number.changed {
   animation: pulse 0.3s ease;
 }
