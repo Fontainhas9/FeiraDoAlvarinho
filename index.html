@@ -39,7 +39,7 @@
 
   <section class="countdown-section">
 
-    <!-- Imagem de fundo: vertical em mobile, horizontal em desktop -->
+    <!-- Imagem de fundo -->
     <picture class="banner" aria-hidden="true">
       <source media="(max-width: 767px)" srcset="bannerm.jpg">
       <img src="banner.jpg" alt="" loading="eager" fetchpriority="high" decoding="async">
@@ -79,9 +79,52 @@
       </div>
 
       <p class="target-date">1 de julho de 2027 · 18h00</p>
+
+      <!-- BOTÃO DESKTOP (download .ics via JS) -->
+      <button type="button" class="add-calendar add-calendar-desktop" id="add-calendar-desktop">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+          <line x1="12" y1="14" x2="12" y2="18"></line>
+          <line x1="10" y1="16" x2="14" y2="16"></line>
+        </svg>
+        <span>Adicionar ao calendário</span>
+      </button>
+
+      <!-- BOTÕES MOBILE (Google e iPhone) -->
+      <div class="add-calendar-mobile" id="add-calendar-mobile">
+        <button type="button" class="add-calendar" id="add-google-calendar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+            <line x1="12" y1="14" x2="12" y2="18"></line>
+            <line x1="10" y1="16" x2="14" y2="16"></line>
+          </svg>
+          <span>Google Calendar</span>
+        </button>
+        <button type="button" class="add-calendar" id="add-apple-calendar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+            <line x1="12" y1="14" x2="12" y2="18"></line>
+            <line x1="10" y1="16" x2="14" y2="16"></line>
+          </svg>
+          <span>iPhone Calendar</span>
+        </button>
+      </div>
+
       <p class="message" id="message"></p>
 
-      <!-- Estado para leitores de ecrã (não visível) -->
+      <!-- Estado para leitores de ecrã -->
       <p class="sr-only" id="sr-status" aria-live="polite"></p>
 
     </div>
@@ -91,6 +134,39 @@
     </footer>
 
   </section>
+
+  <!-- =========================================================
+       POPUP de aviso semanal
+       ========================================================= -->
+  <div class="modal-backdrop" id="week-modal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="week-modal-title">
+      <button class="modal-close" type="button" id="week-modal-close" aria-label="Fechar">×</button>
+
+      <p class="modal-kicker">Aviso semanal</p>
+      <h2 class="modal-title" id="week-modal-title">Faltam <span id="week-modal-count">35</span> semanas</h2>
+      <p class="modal-text" id="week-modal-text">
+        A Feira do Alvarinho de Monção 2027 está cada vez mais perto. Marca já na tua agenda!
+      </p>
+
+      <div class="modal-actions">
+        <button type="button" class="modal-btn modal-btn-primary" id="week-modal-add">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+            <line x1="12" y1="14" x2="12" y2="18"></line>
+            <line x1="10" y1="16" x2="14" y2="16"></line>
+          </svg>
+          <span>Adicionar</span>
+        </button>
+        <button type="button" class="modal-btn modal-btn-ghost" id="week-modal-dismiss">
+          Mais tarde
+        </button>
+      </div>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>

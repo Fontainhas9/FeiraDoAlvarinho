@@ -4,11 +4,7 @@
    COUNTDOWN • Feira do Alvarinho de Monção 2027
    ========================================================= */
 
-/* ---------------------------------------------------------
-   Design tokens
-   --------------------------------------------------------- */
 :root {
-  /* Cores base */
   --verde-profundo: #0a2e24;
   --verde-escuro: #0d3b2e;
   --verde-medio: #145241;
@@ -16,7 +12,6 @@
   --dourado-claro: #f5c542;
   --creme: #f5efe0;
 
-  /* Variantes com opacidade */
   --verde-95: rgba(10, 46, 36, 0.95);
   --verde-85: rgba(10, 46, 36, 0.85);
   --verde-70: rgba(10, 46, 36, 0.70);
@@ -30,7 +25,6 @@
   --creme-78: rgba(245, 239, 224, 0.78);
   --creme-50: rgba(245, 239, 224, 0.50);
 
-  /* Tokens reutilizáveis */
   --blur: blur(8px);
   --radius: 6px;
   --transition: 0.3s ease;
@@ -38,14 +32,10 @@
   --shadow-title: 0 4px 24px rgba(0, 0, 0, 0.45);
   --shadow-number: 0 2px 24px rgba(245, 197, 66, 0.4);
 
-  /* Fontes */
   --font-display: "Cormorant Garamond", serif;
   --font-body: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
-/* ---------------------------------------------------------
-   Reset
-   --------------------------------------------------------- */
 *,
 *::before,
 *::after {
@@ -67,7 +57,6 @@ body {
   overflow-x: hidden;
 }
 
-/* Esconde apenas visualmente (leitores de ecrã continuam a ler) */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -96,10 +85,6 @@ body {
   isolation: isolate;
 }
 
-/* ---------------------------------------------------------
-   Imagem de fundo (via <picture>)
-   SEMPRE completa, sem cortes — em desktop e mobile
-   --------------------------------------------------------- */
 .banner {
   position: absolute;
   inset: 0;
@@ -114,32 +99,19 @@ body {
 .banner img {
   width: 100%;
   height: 100%;
-  object-fit: contain;             /* imagem COMPLETA, nunca cortada */
-  object-position: center center;  /* centrada horizontal e verticalmente */
+  object-fit: contain;
+  object-position: center center;
   filter: saturate(1.05) brightness(0.9);
   display: block;
 }
 
-/* ---------------------------------------------------------
-   Overlay de contraste
-   --------------------------------------------------------- */
 .overlay {
   position: absolute;
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(
-      circle at 50% 45%,
-      var(--verde-35) 0%,
-      var(--verde-70) 55%,
-      var(--verde-95) 100%
-    ),
-    linear-gradient(
-      180deg,
-      var(--verde-55) 0%,
-      var(--verde-35) 45%,
-      var(--verde-85) 100%
-    );
+    radial-gradient(circle at 50% 45%, var(--verde-35) 0%, var(--verde-70) 55%, var(--verde-95) 100%),
+    linear-gradient(180deg, var(--verde-55) 0%, var(--verde-35) 45%, var(--verde-85) 100%);
 }
 
 .overlay::after {
@@ -147,14 +119,7 @@ body {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background-image:
-    repeating-linear-gradient(
-      45deg,
-      rgba(255, 255, 255, 0.015) 0px,
-      rgba(255, 255, 255, 0.015) 1px,
-      transparent 1px,
-      transparent 6px
-    );
+  background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.015) 0px, rgba(255, 255, 255, 0.015) 1px, transparent 1px, transparent 6px);
 }
 
 /* ---------------------------------------------------------
@@ -276,6 +241,65 @@ body {
 }
 
 /* ---------------------------------------------------------
+   Botões de calendário (Desktop e Mobile)
+   --------------------------------------------------------- */
+.add-calendar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.75rem;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--creme);
+  background: var(--dourado-25);
+  border: 1px solid var(--dourado-45);
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all var(--transition);
+  -webkit-backdrop-filter: var(--blur);
+  backdrop-filter: var(--blur);
+  text-decoration: none; /* por causa dos links no mobile */
+}
+
+.add-calendar svg { flex-shrink: 0; transition: transform var(--transition); }
+
+.add-calendar:hover {
+  background: var(--dourado-45);
+  border-color: var(--dourado-claro);
+  color: var(--dourado-claro);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(232, 168, 58, 0.25);
+}
+
+.add-calendar:hover svg { transform: scale(1.1); }
+.add-calendar:focus-visible { outline: 2px solid var(--dourado-claro); outline-offset: 3px; }
+.add-calendar:active { transform: translateY(0); }
+
+.add-calendar.is-confirmed {
+  border-color: var(--dourado-claro);
+  background: var(--dourado-45);
+  color: var(--dourado-claro);
+}
+
+/* Layout dos botões */
+.add-calendar-desktop {
+  margin-top: 1.5rem;
+}
+
+.add-calendar-mobile {
+  display: none; /* escondido em desktop */
+  gap: 0.6rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+/* ---------------------------------------------------------
    Rodapé
    --------------------------------------------------------- */
 .footer {
@@ -289,24 +313,160 @@ body {
 }
 
 /* ---------------------------------------------------------
-   Animação de entrada
+   Animação
    --------------------------------------------------------- */
 @keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(25px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(25px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------------------------------------------------------
+   Popup semanal
+   --------------------------------------------------------- */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.65);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+
+.modal-backdrop.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  padding: 2rem 1.75rem 1.75rem;
+  border-radius: 12px;
+  background: linear-gradient(160deg, var(--verde-escuro) 0%, var(--verde-profundo) 100%);
+  border: 1px solid var(--dourado-45);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6), inset 0 1px 0 var(--dourado-15);
+  text-align: center;
+  transform: translateY(20px) scale(0.96);
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
+}
+
+.modal-backdrop.is-open .modal {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+.modal-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.9rem;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--creme-50);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.modal-close:hover {
+  background: var(--dourado-15);
+  color: var(--dourado-claro);
+}
+
+.modal-kicker {
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--dourado-claro);
+  margin-bottom: 0.75rem;
+}
+
+.modal-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.8rem, 5vw, 2.4rem);
+  line-height: 1.15;
+  color: var(--creme);
+  margin-bottom: 1rem;
+}
+
+.modal-title span {
+  color: var(--dourado-claro);
+  font-variant-numeric: tabular-nums;
+}
+
+.modal-text {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--creme-78);
+  margin-bottom: 1.75rem;
+}
+
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.modal-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 50px;
+  border: 1px solid transparent;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.modal-btn svg { flex-shrink: 0; }
+
+.modal-btn-primary {
+  background: var(--dourado);
+  color: var(--verde-profundo);
+  border-color: var(--dourado);
+}
+
+.modal-btn-primary:hover {
+  background: var(--dourado-claro);
+  border-color: var(--dourado-claro);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(232, 168, 58, 0.35);
+}
+
+.modal-btn-ghost {
+  background: transparent;
+  color: var(--creme-78);
+  border-color: rgba(245, 239, 224, 0.2);
+}
+
+.modal-btn-ghost:hover {
+  background: rgba(245, 239, 224, 0.05);
+  color: var(--creme);
+  border-color: rgba(245, 239, 224, 0.4);
 }
 
 /* ---------------------------------------------------------
    Responsivo
    --------------------------------------------------------- */
-
-/* Tablets: 3 colunas + 2 centradas em baixo (3+2 equilibrado) */
 @media (max-width: 900px) and (min-width: 561px) {
   .countdown {
     grid-template-columns: repeat(6, 1fr);
@@ -318,7 +478,21 @@ body {
   .countdown .unit:nth-child(5) { grid-column: 4 / span 2; }
 }
 
-/* Mobile: 2 colunas + Semanas em cima a toda a largura */
+@media (max-width: 767px) {
+  /* Troca de botões em mobile */
+  .add-calendar-desktop {
+    display: none !important;
+  }
+  .add-calendar-mobile {
+    display: flex !important;
+  }
+  .add-calendar-mobile .add-calendar {
+    flex: 1;
+    min-width: 140px;
+    justify-content: center;
+  }
+}
+
 @media (max-width: 560px) {
   .countdown-section {
     padding: 3rem 1rem 2rem;
@@ -330,7 +504,7 @@ body {
   }
 
   .countdown .unit:nth-child(1) {
-    grid-column: 1 / -1; /* Semanas ocupa a linha toda */
+    grid-column: 1 / -1;
   }
 
   .unit {
@@ -341,10 +515,19 @@ body {
     margin-bottom: 2rem;
   }
 
-  /* Rodapé deixa de sobrepor o conteúdo */
   .footer {
     position: static;
     margin-top: 2.5rem;
+  }
+
+  .add-calendar {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+  }
+
+  .modal {
+    padding: 1.75rem 1.25rem 1.5rem;
   }
 }
 
@@ -352,13 +535,9 @@ body {
    Acessibilidade
    --------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
-  .content {
-    animation: none;
-  }
-  .unit {
-    transition: none;
-  }
-  .number.changed {
-    animation: none;
-  }
+  .content { animation: none; }
+  .unit { transition: none; }
+  .number.changed { animation: none; }
+  .modal-backdrop,
+  .modal { transition: none; }
 }

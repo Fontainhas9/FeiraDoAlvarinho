@@ -4,13 +4,18 @@
   // =========================================================
   // CONFIGURAÇÃO
   // =========================================================
-
-  /**
-   * Data alvo fixa em Lisboa (UTC+1 no verão).
-   * Assim, o countdown termina à mesma hora para todos,
-   * independentemente do fuso horário do visitante.
-   */
   const TARGET_DATE = new Date("2027-07-01T18:00:00+01:00");
+
+  const EVENT = {
+    title: "Feira do Alvarinho de Monção 2027",
+    start: TARGET_DATE,
+    end: new Date("2027-07-04T23:59:00+01:00"),
+    location: "Campo da Feira, Monção, Portugal",
+    description:
+      "A maior Wine Party de Portugal. 1 a 4 de julho de 2027, no Campo da Feira em Monção. " +
+      "Música, gastronomia, Alvarinho e muita festa. Mais informações em feiradoalvarinho.cm-moncao.pt",
+    url: "https://feiradoalvarinho.cm-moncao.pt",
+  };
 
   const SELECTORS = {
     weeks: "weeks",
@@ -37,17 +42,208 @@
   }
 
   // =========================================================
+  // CALENDAR (gera .ics no desktop)
+  // =========================================================
+  const Calendar = {
+    toICSDate(date) {
+      const d = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+      return (
+        d.getUTCFullYear() +
+        pad(d.getUTCMonth() + 1) +
+        pad(d.getUTCDate()) +
+        "T" +
+        pad(d.getUTCHours()) +
+        pad(d.getUTCMinutes()) +
+        pad(d.getUTCSeconds()) +
+        "Z"
+      );
+    },
+
+    escape(text) {
+      return String(text)
+        .replace(/\\/g, "\\\\")
+        .replace(/;/g, "\\;")
+        .replace(/,/g, "\\,")
+        .replace(/\r?\n/g, "\\n");
+    },
+
+    fold(line) {
+      if (line.length <= 75) return line;
+      const chunks = [line.slice(0, 75)];
+      let rest = line.slice(75);
+      while (rest.length > 0) {
+        chunks.push(" " + rest.slice(0, 74));
+        rest = rest.slice(74);
+      }
+      return chunks.join("\r\n");
+    },
+
+    build() {
+      const uid = "feira-alvarinho-2027-" + EVENT.start.getTime() + "@cm-moncao.pt";
+      const lines = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//Feira do Alvarinho//Countdown//PT",
+        "CALSCALE:GREGORIAN",
+        "METHOD:PUBLISH",
+        "BEGIN:VEVENT",
+        "UID:" + uid,
+        "DTSTAMP:" + this.toICSDate(new Date()),
+        "DTSTART:" + this.toICSDate(EVENT.start),
+        "DTEND:" + this.toICSDate(EVENT.end),
+        "SUMMARY:" + this.escape(EVENT.title),
+        "LOCATION:" + this.escape(EVENT.location),
+        "DESCRIPTION:" + this.escape(EVENT.description),
+        "URL:" + this.escape(EVENT.url),
+        "STATUS:CONFIRMED",
+        "END:VEVENT",
+        "END:VCALENDAR",
+      ];
+      return lines.map(this.fold.bind(this)).join("\r\n");
+    },
+
+    download() {
+      try {
+        const content = this.build();
+        const blob = new Blob([content], { type: "text/calendar;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "feira-alvarinho-moncao-2027.ics";
+        link.rel = "noopener";
+        link.style.display = "none";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        return true;
+      } catch (err) {
+        console.error("[Calendar] Erro ao descarregar .ics:", err);
+        return false;
+      }
+    },
+  };
+
+  // =========================================================
+  // GOOGLE CALENDAR LINK
+  // =========================================================
+  function buildGoogleCalendarUrl() {
+    const start = EVENT.start.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+    const end = EVENT.end.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+
+    const params = new URLSearchParams({
+      action: "TEMPLATE",
+      text: EVENT.title,
+      dates: `${start}/${end}`,
+      details: EVENT.description,
+      location: EVENT.location,
+    });
+
+    return `https://calendar.google.com/calendar/render?${params.toString()}`;
+  }
+
+  // =========================================================
+  // WEEK NOTIFIER (popup semanal)
+  // =========================================================
+  const WeekNotifier = {
+    STORAGE_KEY: "alvarinho_2027_last_week_notified",
+    els: {},
+    lastFocus: null,
+
+    init() {
+      this.els.modal = document.getElementById("week-modal");
+      this.els.close = document.getElementById("week-modal-close");
+      this.els.dismiss = document.getElementById("week-modal-dismiss");
+      this.els.add = document.getElementById("week-modal-add");
+      this.els.count = document.getElementById("week-modal-count");
+
+      if (!this.els.modal) return;
+
+      this.els.close?.addEventListener("click", () => this.close());
+      this.els.dismiss?.addEventListener("click", () => this.close());
+
+      this.els.add?.addEventListener("click", () => {
+        // Em mobile, o botão do popup deve abrir a Google Calendar (mais universal)
+        if (window.innerWidth <= 767) {
+          window.open(buildGoogleCalendarUrl(), "_blank", "noopener");
+        } else {
+          Calendar.download();
+        }
+        this.close();
+      });
+
+      this.els.modal.addEventListener("click", (e) => {
+        if (e.target === this.els.modal) this.close();
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && this.isOpen()) this.close();
+      });
+    },
+
+    isOpen() {
+      return this.els.modal?.classList.contains("is-open");
+    },
+
+    open(weeksLeft) {
+      if (!this.els.modal || !this.els.count) return;
+      this.els.count.textContent = String(weeksLeft);
+      this.lastFocus = document.activeElement;
+      this.els.modal.classList.add("is-open");
+      this.els.modal.setAttribute("aria-hidden", "false");
+      setTimeout(() => this.els.add?.focus(), 100);
+    },
+
+    close() {
+      if (!this.els.modal) return;
+      this.els.modal.classList.remove("is-open");
+      this.els.modal.setAttribute("aria-hidden", "true");
+      if (this.lastFocus && typeof this.lastFocus.focus === "function") {
+        this.lastFocus.focus();
+        this.lastFocus = null;
+      }
+    },
+
+    getLastNotified() {
+      try {
+        const raw = localStorage.getItem(this.STORAGE_KEY);
+        return raw === null ? null : parseInt(raw, 10);
+      } catch (_) {
+        return null;
+      }
+    },
+
+    setLastNotified(weeks) {
+      try {
+        localStorage.setItem(this.STORAGE_KEY, String(weeks));
+      } catch (_) {}
+    },
+
+    maybeNotify(weeksLeft) {
+      if (weeksLeft <= 0) return;
+      const last = this.getLastNotified();
+
+      if (last === null) {
+        this.setLastNotified(weeksLeft);
+        return;
+      }
+
+      if (weeksLeft < last) {
+        this.setLastNotified(weeksLeft);
+        this.open(weeksLeft);
+      }
+    },
+  };
+
+  // =========================================================
   // COUNTDOWN
   // =========================================================
   const Countdown = {
     els: {},
-    timerId: null,
     timeoutId: null,
     lastSrMinute: -1,
     finished: false,
 
     init() {
-      // Cache de elementos
       Object.entries(SELECTORS).forEach(([key, id]) => {
         this.els[key] = document.getElementById(id);
       });
@@ -65,24 +261,15 @@
       }
     },
 
-    /**
-     * Agenda o próximo tick sincronizado com o próximo segundo real.
-     * Evita "saltos" quando o browser suspende a aba.
-     */
     scheduleTick() {
       const now = Date.now();
       const msToNextSecond = 1000 - (now % 1000);
-
       this.timeoutId = setTimeout(() => {
         this.tick();
         if (!this.finished) this.scheduleTick();
       }, msToNextSecond);
     },
 
-    /**
-     * Pausa quando a aba está em segundo plano;
-     * retoma (e recalcula imediatamente) quando volta a primeiro plano.
-     */
     bindVisibility() {
       document.addEventListener("visibilitychange", () => {
         if (document.hidden) {
@@ -94,8 +281,6 @@
           }
         }
       });
-
-      // Garante paragem limpa ao fechar a página
       window.addEventListener("pagehide", () => this.stop());
     },
 
@@ -104,35 +289,23 @@
         clearTimeout(this.timeoutId);
         this.timeoutId = null;
       }
-      if (this.timerId) {
-        clearInterval(this.timerId);
-        this.timerId = null;
-      }
     },
 
-    /**
-     * Calcula o tempo restante e delega o render.
-     */
     tick() {
       const now = Date.now();
       const remaining = TARGET_DATE.getTime() - now;
       this.render(remaining);
     },
 
-    /**
-     * Atualiza todos os valores no DOM.
-     */
     render(remainingMs) {
       if (remainingMs <= 0) {
         this.finished = true;
         this.stop();
-
         this.setNumber(this.els.weeks, 0);
         this.setNumber(this.els.days, 0);
         this.setNumber(this.els.hours, 0);
         this.setNumber(this.els.minutes, 0);
         this.setNumber(this.els.seconds, 0);
-
         if (this.els.message) {
           this.els.message.textContent = "É hoje! Bem-vindo à Feira do Alvarinho 🍷";
         }
@@ -143,7 +316,6 @@
       }
 
       const totalSeconds = Math.floor(remainingMs / 1000);
-
       const weeks   = Math.floor(totalSeconds / UNITS.WK);
       const days    = Math.floor((totalSeconds % UNITS.WK) / UNITS.DAY);
       const hours   = Math.floor((totalSeconds % UNITS.DAY) / UNITS.HR);
@@ -157,32 +329,21 @@
       this.setNumber(this.els.seconds, seconds);
 
       this.updateSrStatus(totalSeconds);
+      WeekNotifier.maybeNotify(weeks);
     },
 
-    /**
-     * Atualiza o número e dispara a animação "changed" apenas quando muda.
-     */
     setNumber(el, value) {
       if (!el) return;
-
       const formatted = pad(value);
       if (el.textContent === formatted) return;
-
       el.textContent = formatted;
-
-      // Reinicia a animação
       el.classList.remove("changed");
-      void el.offsetWidth; // força reflow
+      void el.offsetWidth;
       el.classList.add("changed");
     },
 
-    /**
-     * Atualiza o texto para leitores de ecrã apenas a cada minuto,
-     * para não ser intrusivo.
-     */
     updateSrStatus(totalSeconds) {
       if (!this.els.srStatus) return;
-
       const totalMinutes = Math.floor(totalSeconds / 60);
       if (totalMinutes === this.lastSrMinute) return;
       this.lastSrMinute = totalMinutes;
@@ -203,11 +364,59 @@
   };
 
   // =========================================================
+  // BOTÕES DE CALENDÁRIO
+  // =========================================================
+  function bindCalendarButtons() {
+    // Desktop (download)
+    const desktopBtn = document.getElementById("add-calendar-desktop");
+    if (desktopBtn) {
+      desktopBtn.addEventListener("click", () => {
+        const ok = Calendar.download();
+        if (!ok) return;
+        const label = desktopBtn.querySelector("span");
+        if (!label) return;
+        const original = label.textContent;
+        desktopBtn.classList.add("is-confirmed");
+        label.textContent = "Descarregado!";
+        setTimeout(() => {
+          desktopBtn.classList.remove("is-confirmed");
+          label.textContent = original;
+        }, 2200);
+      });
+    }
+
+    // Mobile (Google)
+    const googleBtn = document.getElementById("add-google-calendar");
+    if (googleBtn) {
+      googleBtn.addEventListener("click", () => {
+        window.open(buildGoogleCalendarUrl(), "_blank", "noopener");
+      });
+    }
+
+    // Mobile (Apple)
+    // NOTA: O Safari do iPhone bloqueia downloads via Blob. A forma mais fiável
+    // é abrir o ficheiro .ics ESTÁTICO (que deve estar na mesma pasta).
+    const appleBtn = document.getElementById("add-apple-calendar");
+    if (appleBtn) {
+      appleBtn.addEventListener("click", () => {
+        // Redireciona para o ficheiro estático que o Safari abre nativamente
+        window.location.href = "feira-alvarinho-2027.ics";
+      });
+    }
+  }
+
+  // =========================================================
   // ARRANQUE
   // =========================================================
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => Countdown.init());
-  } else {
+  function boot() {
     Countdown.init();
+    WeekNotifier.init();
+    bindCalendarButtons();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
   }
 })();
