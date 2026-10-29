@@ -307,6 +307,8 @@ body {
    --------------------------------------------------------- */
 .add-calendar-desktop {
   display: inline-flex;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .add-calendar-mobile {
@@ -492,7 +494,6 @@ body {
    Responsivo
    --------------------------------------------------------- */
 
-/* Tablet */
 @media (max-width: 900px) and (min-width: 561px) {
   .countdown {
     grid-template-columns: repeat(6, 1fr);
@@ -504,9 +505,7 @@ body {
   .countdown .unit:nth-child(5) { grid-column: 4 / span 2; }
 }
 
-/* Mobile */
 @media (max-width: 767px) {
-  /* Esconde o botão de download e mostra os da Google/Apple */
   .add-calendar-desktop {
     display: none !important;
   }
@@ -557,9 +556,6 @@ body {
   }
 }
 
-/* ---------------------------------------------------------
-   Acessibilidade
-   --------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
   .content { animation: none; }
   .unit { transition: none; }

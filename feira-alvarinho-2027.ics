@@ -6,11 +6,11 @@ METHOD:PUBLISH
 BEGIN:VEVENT
 UID:feira-alvarinho-2027@cm-moncao.pt
 DTSTAMP:20260921T120000Z
-DTSTART:20270701T170000Z
-DTEND:20270704T225900Z
+DTSTART;TZID=Europe/Lisbon:20270701T180000
+DTEND;TZID=Europe/Lisbon:20270704T235900
 SUMMARY:Feira do Alvarinho de Monção 2027
 LOCATION:Parque das Caldas, Monção, Portugal
-DESCRIPTION:A maior Wine Party de Portugal. 1 a 4 de julho de 2027...
+DESCRIPTION:A maior Wine Party de Portugal...
 URL:https://feiradoalvarinho.cm-moncao.pt
 STATUS:CONFIRMED
 

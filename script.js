@@ -10,9 +10,9 @@
     title: "Feira do Alvarinho de Monção 2027",
     start: TARGET_DATE,
     end: new Date("2027-07-04T23:59:00+01:00"),
-    location: "Campo da Feira, Monção, Portugal",
+    location: "Parque das Caldas, Monção, Portugal",
     description:
-      "A maior Wine Party de Portugal. 1 a 4 de julho de 2027, no Campo da Feira em Monção. " +
+      "A maior Wine Party de Portugal. 1 a 4 de julho de 2027, no Parque das Caldas em Monção. " +
       "Música, gastronomia, Alvarinho e muita festa. Mais informações em feiradoalvarinho.cm-moncao.pt",
     url: "https://feiradoalvarinho.cm-moncao.pt",
   };
@@ -33,6 +33,12 @@
     HR: 60 * 60,
     MIN: 60,
   };
+
+  // =========================================================
+  // DETEÇÃO DE SISTEMA OPERATIVO
+  // =========================================================
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const isAndroid = /Android/.test(navigator.userAgent);
 
   // =========================================================
   // HELPERS
@@ -163,11 +169,13 @@
       this.els.dismiss?.addEventListener("click", () => this.close());
 
       this.els.add?.addEventListener("click", () => {
-        // Em mobile, o botão do popup deve abrir a Google Calendar (mais universal)
-        if (window.innerWidth <= 767) {
+        // Lógica inteligente baseada no sistema operativo
+        if (isIOS) {
+          window.location.href = "feira-alvarinho-2027.ics";
+        } else if (isAndroid) {
           window.open(buildGoogleCalendarUrl(), "_blank", "noopener");
         } else {
-          Calendar.download();
+          Calendar.download(); // Fallback desktop
         }
         this.close();
       });
@@ -364,9 +372,11 @@
   };
 
   // =========================================================
-  // BOTÕES DE CALENDÁRIO
+  // BOTÕES DE CALENDÁRIO (Fora do popup)
   // =========================================================
   function bindCalendarButtons() {
+    const urlGoogle = buildGoogleCalendarUrl();
+
     // Desktop (download)
     const desktopBtn = document.getElementById("add-calendar-desktop");
     if (desktopBtn) {
@@ -389,17 +399,14 @@
     const googleBtn = document.getElementById("add-google-calendar");
     if (googleBtn) {
       googleBtn.addEventListener("click", () => {
-        window.open(buildGoogleCalendarUrl(), "_blank", "noopener");
+        window.open(urlGoogle, "_blank", "noopener");
       });
     }
 
     // Mobile (Apple)
-    // NOTA: O Safari do iPhone bloqueia downloads via Blob. A forma mais fiável
-    // é abrir o ficheiro .ics ESTÁTICO (que deve estar na mesma pasta).
     const appleBtn = document.getElementById("add-apple-calendar");
     if (appleBtn) {
       appleBtn.addEventListener("click", () => {
-        // Redireciona para o ficheiro estático que o Safari abre nativamente
         window.location.href = "feira-alvarinho-2027.ics";
       });
     }
