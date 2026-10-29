@@ -241,62 +241,86 @@ body {
 }
 
 /* ---------------------------------------------------------
-   Botões de calendário (Desktop e Mobile)
+   Botões de calendário (Geral)
    --------------------------------------------------------- */
 .add-calendar {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
-  padding: 0.85rem 1.75rem;
+  
+  padding: 0.8rem 1.5rem;
+  margin-top: 1.5rem;
+  
   font-family: var(--font-body);
-  font-size: 0.8rem;
-  font-weight: 500;
-  letter-spacing: 0.2em;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
+  text-decoration: none;
   white-space: nowrap;
-  color: var(--creme);
-  background: var(--dourado-25);
-  border: 1px solid var(--dourado-45);
+  
+  color: var(--verde-profundo);
+  background: var(--dourado-claro);
+  border: 1px solid var(--dourado-claro);
   border-radius: 50px;
+  box-shadow: 0 4px 15px rgba(245, 197, 66, 0.2);
+  
   cursor: pointer;
-  transition: all var(--transition);
-  -webkit-backdrop-filter: var(--blur);
-  backdrop-filter: var(--blur);
-  text-decoration: none; /* por causa dos links no mobile */
+  transition: all 0.3s ease;
 }
 
-.add-calendar svg { flex-shrink: 0; transition: transform var(--transition); }
+.add-calendar svg {
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
 
 .add-calendar:hover {
-  background: var(--dourado-45);
-  border-color: var(--dourado-claro);
-  color: var(--dourado-claro);
+  background: var(--creme);
+  border-color: var(--creme);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(232, 168, 58, 0.25);
+  box-shadow: 0 6px 20px rgba(245, 197, 66, 0.35);
 }
 
-.add-calendar:hover svg { transform: scale(1.1); }
-.add-calendar:focus-visible { outline: 2px solid var(--dourado-claro); outline-offset: 3px; }
-.add-calendar:active { transform: translateY(0); }
+.add-calendar:hover svg {
+  transform: scale(1.1);
+}
 
+.add-calendar:active {
+  transform: translateY(0);
+}
+
+.add-calendar:focus-visible {
+  outline: 2px solid var(--creme);
+  outline-offset: 3px;
+}
+
+/* Feedback visual no Desktop */
 .add-calendar.is-confirmed {
-  border-color: var(--dourado-claro);
-  background: var(--dourado-45);
+  background: var(--verde-medio);
   color: var(--dourado-claro);
+  border-color: var(--dourado-claro);
 }
 
-/* Layout dos botões */
+/* ---------------------------------------------------------
+   Contentores de botões (Desktop vs Mobile)
+   --------------------------------------------------------- */
 .add-calendar-desktop {
-  margin-top: 1.5rem;
+  display: inline-flex;
 }
 
 .add-calendar-mobile {
-  display: none; /* escondido em desktop */
-  gap: 0.6rem;
+  display: none; /* Escondido em desktop */
+  gap: 0.8rem;
   justify-content: center;
   flex-wrap: wrap;
   margin-top: 1.5rem;
+}
+
+.add-calendar-mobile .add-calendar {
+  margin-top: 0;
+  flex: 1;
+  min-width: 160px;
 }
 
 /* ---------------------------------------------------------
@@ -467,6 +491,8 @@ body {
 /* ---------------------------------------------------------
    Responsivo
    --------------------------------------------------------- */
+
+/* Tablet */
 @media (max-width: 900px) and (min-width: 561px) {
   .countdown {
     grid-template-columns: repeat(6, 1fr);
@@ -478,18 +504,24 @@ body {
   .countdown .unit:nth-child(5) { grid-column: 4 / span 2; }
 }
 
+/* Mobile */
 @media (max-width: 767px) {
-  /* Troca de botões em mobile */
+  /* Esconde o botão de download e mostra os da Google/Apple */
   .add-calendar-desktop {
     display: none !important;
   }
+  
   .add-calendar-mobile {
     display: flex !important;
+    flex-direction: column;
+    width: 100%;
+    max-width: 280px;
+    margin-left: auto;
+    margin-right: auto;
   }
+  
   .add-calendar-mobile .add-calendar {
-    flex: 1;
-    min-width: 140px;
-    justify-content: center;
+    width: 100%;
   }
 }
 
@@ -518,12 +550,6 @@ body {
   .footer {
     position: static;
     margin-top: 2.5rem;
-  }
-
-  .add-calendar {
-    padding: 0.75rem 1.25rem;
-    font-size: 0.7rem;
-    letter-spacing: 0.15em;
   }
 
   .modal {
