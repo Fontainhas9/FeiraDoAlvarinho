@@ -16,8 +16,8 @@ STATUS:CONFIRMED
 
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:Faltam 3 semanas para a Feira do Alvarinho!
-TRIGGER:-P3W
+DESCRIPTION:Falta 1 semana para a Feira do Alvarinho!
+TRIGGER:-P1W
 END:VALARM
 
 BEGIN:VALARM
@@ -28,8 +28,20 @@ END:VALARM
 
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:Falta 1 semana para a Feira do Alvarinho!
-TRIGGER:-P1W
+DESCRIPTION:Faltam 3 semanas para a Feira do Alvarinho!
+TRIGGER:-P3W
+END:VALARM
+
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Faltam 4 semanas para a Feira do Alvarinho!
+TRIGGER:-P4W
+END:VALARM
+
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Faltam 5 semanas para a Feira do Alvarinho!
+TRIGGER:-P5W
 END:VALARM
 
 END:VEVENT
